@@ -7,7 +7,7 @@ import HelloWorld from './components/HelloWorld.vue'
   <header>
     <div class="header">
       <router-link class="link" to="/">
-        <h2 class="text-3xl">水彩</h2>
+        <h2 class="text-3xl font-bold underline">水彩</h2>
         <h2>suisai</h2>
       </router-link>
     </div>
