@@ -5,9 +5,9 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <header class="bg-lime-600">
     <div class="header">
-      <router-link class="link" to="/">
+      <router-link class="title" to="/">
         <h2 class="text-3xl text-lime-100">水彩</h2>
-        <h2 class="text-3xl text-stone-200">suisai</h2>
+        <h2 class="text-3xl text-slate-200">suisai</h2>
       </router-link>
     </div>
   </header>
@@ -21,7 +21,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style scoped lang="scss">
 
-  .link {
+  .title {
     display: flex;
     flex-direction: row;
 
