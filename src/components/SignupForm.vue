@@ -7,11 +7,11 @@
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create an account</h2>
+      <h2 class="mt-8 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create an account</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <div class="space-y-6">
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
           <div class="mt-2">
@@ -36,7 +36,7 @@
         <div>
           <button class="btn btn-primary btn-block">Register</button>
         </div>
-      </form>
+      </div>
 
       <p class="mt-10 text-center text-sm text-gray-500">
         Already a member?

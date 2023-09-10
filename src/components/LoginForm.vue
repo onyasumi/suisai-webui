@@ -8,7 +8,7 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <div class="space-y-6">
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
           <div class="mt-2">
@@ -26,7 +26,7 @@
         <div>
           <button class="btn btn-primary btn-block">Sign In</button>
         </div>
-      </form>
+      </div>
 
       <p class="mt-10 text-center text-sm text-gray-500">
         Not a member?
