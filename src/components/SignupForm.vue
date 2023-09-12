@@ -1,8 +1,23 @@
 <script setup lang="ts">
 
+import {Ref, ref} from "vue";
 
+const emailError: Ref<boolean> = ref(false);
+const passwdError: Ref<boolean> = ref(false);
+const passwdConfirmError: Ref<boolean> = ref(false);
+
+let email: string = "";
+
+function checkEmail(): boolean {
+
+  if(email.length == 0) return true;
+  else return email.match(/.+@.+\..+/g) == null;
+
+}
 
 </script>
+
+
 
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -13,23 +28,32 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <div class="space-y-6">
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+          <label for="email" class="label text-sm font-medium leading-6 text-gray-900">
+            Email address
+            <span class="label-text-alt text-error">Bottom Right label</span>
+          </label>
           <div class="mt-2">
-            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full " />
+            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError}" v-model="email" @focusin="emailError = false" @focusout="emailError = checkEmail()"/>
           </div>
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+          <label for="password" class="label text-sm font-medium leading-6 text-gray-900">
+            Password
+            <span class="label-text-alt text-error">Bottom Right label</span>
+          </label>
           <div class="mt-2">
-            <input type="password" placeholder="********" class="input input-bordered focus:input-secondary w-full" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" />
           </div>
         </div>
 
         <div>
-          <label for="confirm-password" class="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
+          <label for="confirm-password" class="label text-sm font-medium leading-6 text-gray-900">
+            Confirm Password
+            <span class="label-text-alt text-error">Bottom Right label</span>
+          </label>
           <div class="mt-2">
-            <input type="password" placeholder="********" class="input input-bordered focus:input-secondary w-full" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" />
           </div>
         </div>
 
@@ -45,3 +69,13 @@
     </div>
   </div>
 </template>
+
+
+
+<style scoped lang="scss">
+
+.label {
+  padding: 0;
+}
+
+</style>
