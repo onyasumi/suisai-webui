@@ -3,16 +3,33 @@
 import type {Ref} from "vue";
 import {ref} from "vue";
 
-const emailError: Ref<boolean> = ref(false);
-const passwdError: Ref<boolean> = ref(false);
-const passwdConfirmError: Ref<boolean> = ref(false);
+const emailError: Ref<string> = ref("");
+const passwdError: Ref<string> = ref("");
+const passwdConfirmError: Ref<string> = ref("");
 
 let email: string = "";
+let password: string = "";
+let confirm: string = "";
 
-function checkEmail(): boolean {
+function checkEmail(): string {
 
-  if(email.length == 0) return true;
-  else return email.match(/.+@.+\..+/g) == null;
+  if(email.length == 0) return "Please enter your email";
+  else if(email.match(/.+@.+\..+/g) == null) return "Invalid email";
+  else return "";
+
+}
+
+function checkPassword(): string {
+
+  if(password.length == 0) return "Please provide a password";
+  else return "";
+
+}
+
+function confirmPassword(): string {
+
+  if(password != confirm) return "Passwords do not match";
+  else return "";
 
 }
 
@@ -31,30 +48,30 @@ function checkEmail(): boolean {
         <div>
           <label for="email" class="label text-sm font-medium leading-6 text-gray-900">
             Email address
-            <span class="label-text-alt text-error">Bottom Right label</span>
+            <span class="label-text-alt text-error" v-show="emailError.length != 0">{{emailError}}</span>
           </label>
           <div class="mt-2">
-            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError}" v-model="email" @focusin="emailError = false" @focusout="emailError = checkEmail()"/>
+            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-model="email" @focusin="emailError = ''" @focusout="emailError = checkEmail()" />
           </div>
         </div>
 
         <div>
           <label for="password" class="label text-sm font-medium leading-6 text-gray-900">
             Password
-            <span class="label-text-alt text-error">Bottom Right label</span>
+            <span class="label-text-alt text-error" v-show="passwdError.length != 0">{{passwdError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" v-model="password" @focusin="passwdError = ''" @focusout="passwdError = checkPassword()" />
           </div>
         </div>
 
         <div>
           <label for="confirm-password" class="label text-sm font-medium leading-6 text-gray-900">
             Confirm Password
-            <span class="label-text-alt text-error">Bottom Right label</span>
+            <span class="label-text-alt text-error" v-show="passwdConfirmError.length != 0">{{passwdConfirmError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" v-model="confirm" @focusin="passwdConfirmError = ''" @focusout="passwdConfirmError = confirmPassword()" />
           </div>
         </div>
 
