@@ -3,6 +3,7 @@
 import type {Ref} from "vue";
 import {ref} from "vue";
 import {apiPrefix} from "@/config";
+import {useRouter} from "vue-router";
 
 const emailError: Ref<string> = ref("");
 const passwdError: Ref<string> = ref("");
@@ -59,11 +60,8 @@ function signup() {
 
         if(response.ok) {
           response.json().then(result => {
-
             localStorage.setItem('authToken', result)
-
-            // TODO: NAVIGATE TO HOME SCREEN
-
+            useRouter().push('/dashboard');
           })
         }
         else if(response.status == 409) emailError.value = "Email taken"

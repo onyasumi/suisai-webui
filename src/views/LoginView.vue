@@ -5,7 +5,7 @@ import SignupForm from "@/components/SignupForm.vue";
 import {useRoute, useRouter} from 'vue-router'
 const location = useRoute();
 
-if (localStorage.getItem('authToken') != null) useRouter().push('/about');
+if (localStorage.getItem('authToken') != null) useRouter().push('/dashboard');
 
 </script>
 
