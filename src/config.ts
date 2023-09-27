@@ -1,0 +1,1 @@
+export const apiPrefix: String = 'http://localhost:3000'

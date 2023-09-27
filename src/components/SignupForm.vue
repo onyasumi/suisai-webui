@@ -2,6 +2,7 @@
 
 import type {Ref} from "vue";
 import {ref} from "vue";
+import {apiPrefix} from "@/config";
 
 const emailError: Ref<string> = ref("");
 const passwdError: Ref<string> = ref("");
@@ -11,25 +12,64 @@ let email: string = "";
 let password: string = "";
 let confirm: string = "";
 
-function checkEmail(): string {
+function checkEmail() {
 
-  if(email.length == 0) return "Please enter your email";
-  else if(email.match(/.+@.+\..+/g) == null) return "Invalid email";
-  else return "";
-
-}
-
-function checkPassword(): string {
-
-  if(password.length == 0) return "Please provide a password";
-  else return "";
+  if(email.length == 0) emailError.value = "Please enter your email";
+  else if(email.match(/.+@.+\..+/g) == null) emailError.value = "Invalid email";
+  else emailError.value = "";
 
 }
 
-function confirmPassword(): string {
+function checkPassword() {
 
-  if(password != confirm) return "Passwords do not match";
-  else return "";
+  if(password.length == 0) passwdError.value = "Please provide a password";
+  else passwdError.value = "";
+
+}
+
+function confirmPassword() {
+
+  if(password != confirm) passwdConfirmError.value = "Passwords do not match";
+  else passwdConfirmError.value = "";
+
+}
+
+function signup() {
+
+  checkEmail()
+  checkPassword()
+  confirmPassword()
+
+  if(emailError.value.length != 0 || passwdError.value.length != 0 || passwdConfirmError.value.length != 0) {
+    console.log("Input Error")
+    return
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      email: email,
+      password: password
+    })
+  }
+
+  fetch(apiPrefix + '/auth/signup', requestOptions)
+      .then(response => {
+
+        if(response.ok) {
+          response.json().then(result => {
+
+            localStorage.setItem('authToken', result)
+
+            // TODO: NAVIGATE TO HOME SCREEN
+
+          })
+        }
+        else if(response.status == 409) emailError.value = "Email taken"
+        else alert("Registration failed: " + response.status)
+
+      })
 
 }
 
@@ -51,7 +91,7 @@ function confirmPassword(): string {
             <span class="label-text-alt text-error" v-show="emailError.length != 0">{{emailError}}</span>
           </label>
           <div class="mt-2">
-            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-model="email" @focusin="emailError = ''" @focusout="emailError = checkEmail()" />
+            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-model="email" @focusin="emailError = ''" @focusout="checkEmail()" />
           </div>
         </div>
 
@@ -61,7 +101,7 @@ function confirmPassword(): string {
             <span class="label-text-alt text-error" v-show="passwdError.length != 0">{{passwdError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" v-model="password" @focusin="passwdError = ''" @focusout="passwdError = checkPassword()" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" v-model="password" @focusin="passwdError = ''" @focusout="checkPassword()" />
           </div>
         </div>
 
@@ -71,12 +111,12 @@ function confirmPassword(): string {
             <span class="label-text-alt text-error" v-show="passwdConfirmError.length != 0">{{passwdConfirmError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" v-model="confirm" @focusin="passwdConfirmError = ''" @focusout="passwdConfirmError = confirmPassword()" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" v-model="confirm" @focusin="passwdConfirmError = ''" @focusout="confirmPassword()" />
           </div>
         </div>
 
         <div>
-          <button class="btn btn-primary btn-block">Register</button>
+          <button class="btn btn-primary btn-block" @click="signup()">Register</button>
         </div>
       </div>
 
