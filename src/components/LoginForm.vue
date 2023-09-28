@@ -2,6 +2,8 @@
 
 import type {Ref} from "vue";
 import {ref} from "vue";
+import {apiPrefix} from "@/config";
+import {useRouter} from "vue-router";
 
 const emailError: Ref<string> = ref("");
 const passwdError: Ref<string> = ref("");
@@ -21,6 +23,41 @@ function checkPassword(): string {
 
   if(password.length == 0) return "Please enter your password";
   else return "";
+
+}
+
+function login() {
+
+  checkEmail()
+  checkPassword()
+
+  if(emailError.value.length != 0 || passwdError.value.length != 0) {
+    console.log("Input Error")
+    return
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      email: email,
+      password: password
+    })
+  }
+
+  fetch(apiPrefix + '/auth/login', requestOptions)
+      .then(response => {
+
+        if(response.ok) {
+          response.json().then(result => {
+            localStorage.setItem('authToken', result)
+            useRouter().push('/dashboard');
+          })
+        }
+        else if(response.status == 401) passwdError.value = "Incorrect email or password"
+        else alert("Login failed: " + response.status)
+
+      })
 
 }
 
@@ -55,7 +92,7 @@ function checkPassword(): string {
         </div>
 
         <div>
-          <button class="btn btn-primary btn-block">Sign In</button>
+          <button class="btn btn-primary btn-block" @click="login()">Sign In</button>
         </div>
       </div>
 
