@@ -7,6 +7,7 @@ import {useRouter} from "vue-router";
 
 const emailError: Ref<string> = ref("");
 const passwdError: Ref<string> = ref("");
+const genericError: Ref<string> = ref("");
 
 let email: string = "";
 let password: string = "";
@@ -27,6 +28,8 @@ function checkPassword(): string {
 }
 
 function login() {
+
+  genericError.value = ""
 
   checkEmail()
   checkPassword()
@@ -54,11 +57,16 @@ function login() {
             useRouter().push('/dashboard');
           })
         }
-        else if(response.status == 401) passwdError.value = "Incorrect email or password"
-        else alert("Login failed: " + response.status)
+        else if(response.status == 401) genericError.value = "Incorrect email or password"
+        else genericError.value = ("Login failed: " + response.status)
 
       })
 
+}
+
+function sendFocus(id: string) {
+  (document.activeElement as HTMLElement).blur()
+  document.getElementById(id)!.focus()
 }
 
 </script>
@@ -77,7 +85,7 @@ function login() {
             <span class="label-text-alt text-error" v-show="emailError.length != 0">{{emailError}}</span>
           </label>
           <div class="mt-2">
-            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-model="email" @focusin="emailError = ''" @focusout="emailError = checkEmail()" />
+            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-on:keyup.enter="sendFocus('inputPasswd')" v-model="email" @focusin="emailError = ''" @focusout="emailError = checkEmail()" />
           </div>
         </div>
 
@@ -87,12 +95,16 @@ function login() {
             <span class="label-text-alt text-error" v-show="passwdError.length != 0">{{passwdError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" v-model="password" @focusin="passwdError = ''" @focusout="passwdError = checkPassword()" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" id="inputPasswd" v-on:keyup.enter="(e) => {(e.target as HTMLElement).blur(); login()}" v-model="password" @focusin="passwdError = ''" @focusout="passwdError = checkPassword()" />
           </div>
         </div>
 
         <div>
-          <button class="btn btn-primary btn-block" @click="login()">Sign In</button>
+          <p class="text-center text-error" v-show="genericError.length != 0">{{genericError}}</p>
+        </div>
+
+        <div>
+          <button class="btn btn-primary btn-block" id="btnLogin" @click="login()">Sign In</button>
         </div>
       </div>
 

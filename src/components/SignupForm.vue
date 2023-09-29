@@ -8,6 +8,7 @@ import {useRouter} from "vue-router";
 const emailError: Ref<string> = ref("");
 const passwdError: Ref<string> = ref("");
 const passwdConfirmError: Ref<string> = ref("");
+const genericError: Ref<string> = ref("");
 
 let email: string = "";
 let password: string = "";
@@ -37,6 +38,8 @@ function confirmPassword() {
 
 function signup() {
 
+  genericError.value = ""
+
   checkEmail()
   checkPassword()
   confirmPassword()
@@ -64,11 +67,19 @@ function signup() {
             useRouter().push('/dashboard');
           })
         }
-        else if(response.status == 409) emailError.value = "Email taken"
-        else alert("Registration failed: " + response.status)
+        else if(response.status == 409) {
+          emailError.value = "Please enter a new email"
+          genericError.value = "Email already registered"
+        }
+        else genericError.value = ("Registration failed: " + response.status)
 
       })
 
+}
+
+function sendFocus(id: string) {
+  (document.activeElement as HTMLElement).blur()
+  document.getElementById(id)!.focus()
 }
 
 </script>
@@ -89,7 +100,7 @@ function signup() {
             <span class="label-text-alt text-error" v-show="emailError.length != 0">{{emailError}}</span>
           </label>
           <div class="mt-2">
-            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-model="email" @focusin="emailError = ''" @focusout="checkEmail()" />
+            <input type="text" placeholder="akira@karatsubalabs.com" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': emailError.length}" v-on:keyup.enter="sendFocus('inputPasswd')" v-model="email" @focusin="emailError = ''" @focusout="checkEmail()" />
           </div>
         </div>
 
@@ -99,7 +110,7 @@ function signup() {
             <span class="label-text-alt text-error" v-show="passwdError.length != 0">{{passwdError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" v-model="password" @focusin="passwdError = ''" @focusout="checkPassword()" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdError}" id="inputPasswd" v-on:keyup.enter="sendFocus('inputConfirm')" v-model="password" @focusin="passwdError = ''" @focusout="checkPassword()" />
           </div>
         </div>
 
@@ -109,8 +120,12 @@ function signup() {
             <span class="label-text-alt text-error" v-show="passwdConfirmError.length != 0">{{passwdConfirmError}}</span>
           </label>
           <div class="mt-2">
-            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" v-model="confirm" @focusin="passwdConfirmError = ''" @focusout="confirmPassword()" />
+            <input type="password" placeholder="••••••••" class="input input-bordered focus:input-secondary w-full" :class="{'input-error': passwdConfirmError}" id="inputConfirm" v-on:keyup.enter="(e) => {(e.target as HTMLElement).blur(); signup()}" v-model="confirm" @focusin="passwdConfirmError = ''" @focusout="confirmPassword()" />
           </div>
+        </div>
+
+        <div>
+          <p class="text-center text-error" v-show="genericError.length != 0">{{genericError}}</p>
         </div>
 
         <div>
